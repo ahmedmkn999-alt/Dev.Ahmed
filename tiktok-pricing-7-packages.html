@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390px, initial-scale=1.0">
+<title>عروض المواقع - 7 باقات</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans+Arabic:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:390px;height:844px;overflow:hidden;background:#000;font-family:'IBM Plex Sans Arabic',sans-serif;}
+
+  /* PROGRESS */
+  .progress-bars{position:fixed;top:16px;left:12px;right:12px;display:flex;gap:4px;z-index:999;}
+  .prog-bar{flex:1;height:2.5px;background:rgba(255,255,255,0.2);border-radius:2px;overflow:hidden;}
+  .prog-fill{height:100%;background:#fff;width:0%;border-radius:2px;}
+  .prog-bar.done .prog-fill{width:100%;}
+  .prog-bar.active .prog-fill{animation:fillBar 7s linear forwards;}
+  @keyframes fillBar{from{width:0%}to{width:100%}}
+
+  /* SLIDES */
+  .slides{position:relative;width:390px;height:844px;}
+  .slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 0.5s ease;overflow:hidden;}
+  .slide.active{opacity:1;pointer-events:all;}
+
+  /* SHARED ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes zoomIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+  @keyframes slideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(0,245,160,0.3)}50%{box-shadow:0 0 40px rgba(0,245,160,0.7)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+  /* ===========================
+     SLIDE 1 — HOOK / INTRO
+  =========================== */
+  #s1{
+    background:#050508;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+  }
+  #s1 .bg-grid{
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(0,245,160,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,160,0.05) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  #s1 .orb{
+    position:absolute;width:380px;height:380px;
+    background:radial-gradient(circle,rgba(0,245,160,0.15),transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;
+    animation:pulse 4s ease-in-out infinite;
+  }
+  #s1 .content{position:relative;z-index:2;padding:50px 28px;}
+
+  #s1 .eyebrow{
+    font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:4px;
+    color:rgba(0,245,160,0.7);text-transform:uppercase;margin-bottom:20px;
+    opacity:0;animation:fadeDown 0.5s 0.2s both;
+  }
+  #s1 .question{
+    font-family:'Bebas Neue',sans-serif;font-size:3.6rem;line-height:1;
+    letter-spacing:3px;color:#fff;margin-bottom:20px;
+    opacity:0;animation:fadeUp 0.6s 0.4s both;
+  }
+  #s1 .question .hl{color:#00f5a0;text-shadow:0 0 30px rgba(0,245,160,0.6);}
+  #s1 .who-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;opacity:0;animation:fadeUp 0.5s 0.7s both;}
+  .wcard{
+    background:rgba(255,255,255,0.04);border:1px solid rgba(0,245,160,0.15);
+    border-radius:14px;padding:11px 18px;
+    display:flex;align-items:center;gap:12px;direction:rtl;
+    font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.8);
+  }
+  .wcard .icon{font-size:1.3rem;}
+  #s1 .answer{
+    font-size:0.95rem;color:rgba(255,255,255,0.5);line-height:1.9;direction:rtl;
+    margin-bottom:24px;opacity:0;animation:fadeUp 0.5s 0.95s both;
+  }
+  #s1 .answer strong{color:#00f5a0;}
+  #s1 .price-pill{
+    display:inline-block;
+    background:rgba(0,245,160,0.1);border:1.5px solid #00f5a0;
+    padding:11px 32px;border-radius:100px;
+    font-size:1rem;font-weight:700;color:#fff;direction:rtl;
+    box-shadow:0 0 24px rgba(0,245,160,0.25);
+    opacity:0;animation:zoomIn 0.5s 1.2s both;
+  }
+  #s1 .price-pill span{color:#00f5a0;font-size:1.25rem;}
+
+  /* ===========================
+     PACKAGE SLIDES - SHARED
+  =========================== */
+  .pkg-slide{background:#06060a;}
+  .pkg-slide .bg-stripe{
+    position:absolute;inset:0;
+    background:repeating-linear-gradient(-45deg,transparent,transparent 35px,rgba(255,255,255,0.02) 35px,rgba(255,255,255,0.02) 36px);
+  }
+  .pkg-slide .top-label{
+    position:absolute;top:48px;left:0;right:0;text-align:center;z-index:2;
+    opacity:0;
+  }
+  .pkg-slide.active .top-label{animation:fadeDown 0.5s 0.2s both;}
+  .pkg-slide .pkg-num{font-family:'Space Mono',monospace;font-size:0.58rem;letter-spacing:4px;}
+  .pkg-slide .pkg-name{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:4px;color:#fff;}
+  .pkg-slide .pkg-name-ar{font-size:0.85rem;color:rgba(255,255,255,0.35);direction:rtl;margin-top:2px;}
+  .pkg-slide .pkg-badge{
+    display:inline-block;border-radius:100px;padding:3px 12px;font-size:0.6rem;
+    font-family:'Space Mono',monospace;letter-spacing:2px;margin-top:4px;
+  }
+
+  .pkg-slide .card{
+    position:absolute;left:20px;right:20px;top:140px;bottom:60px;
+    background:rgba(10,10,18,0.95);
+    border-radius:24px;
+    padding:24px 20px;z-index:2;
+    opacity:0;
+  }
+  .pkg-slide.active .card{animation:zoomIn 0.6s 0.35s both;}
+
+  .price-row{display:flex;align-items:baseline;gap:6px;justify-content:center;margin-bottom:6px;direction:rtl;}
+  .price-main{font-family:'Bebas Neue',sans-serif;font-size:4.2rem;line-height:1;}
+  .price-currency{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;}
+  .price-note{font-size:0.72rem;color:rgba(255,255,255,0.3);direction:rtl;text-align:center;margin-bottom:18px;}
+
+  .features{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .feat{
+    display:flex;align-items:center;gap:10px;direction:rtl;
+    font-size:0.84rem;color:rgba(255,255,255,0.75);line-height:1.4;
+  }
+  .feat .ck{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;flex-shrink:0;}
+  
+  .extra-note{
+    border-radius:10px;padding:8px 12px;
+    font-size:0.74rem;direction:rtl;line-height:1.5;text-align:center;
+  }
+  .extra-note .em{font-weight:700;}
+
+  /* PACKAGE 1 - STARTER (Blue) */
+  #s2 .pkg-num{color:rgba(100,200,255,0.6);}
+  #s2 .card{border:1px solid rgba(100,200,255,0.2);}
+  #s2 .price-main{color:#64c8ff;text-shadow:0 0 30px rgba(100,200,255,0.4);}
+  #s2 .price-currency{color:rgba(100,200,255,0.5);}
+  #s2 .ck{background:rgba(100,200,255,0.12);color:#64c8ff;border:1px solid rgba(100,200,255,0.25);}
+  #s2 .extra-note{background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.2);color:rgba(255,200,50,0.8);}
+  #s2 .extra-note .em{color:#ffc832;}
+
+  /* PACKAGE 2 - BASIC (Cyan) */
+  #s3 .pkg-num{color:rgba(0,220,220,0.6);}
+  #s3 .card{border:1px solid rgba(0,220,220,0.25);}
+  #s3 .price-main{color:#00dcdc;text-shadow:0 0 30px rgba(0,220,220,0.4);}
+  #s3 .price-currency{color:rgba(0,220,220,0.5);}
+  #s3 .ck{background:rgba(0,220,220,0.12);color:#00dcdc;border:1px solid rgba(0,220,220,0.25);}
+  #s3 .extra-note{background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.2);color:rgba(255,200,50,0.8);}
+  #s3 .extra-note .em{color:#ffc832;}
+
+  /* PACKAGE 3 - STANDARD (Green) */
+  #s4{background:#040a06;}
+  #s4 .bg-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(0,245,160,0.1),transparent 65%);}
+  #s4 .pkg-num{color:rgba(0,245,160,0.6);}
+  #s4 .pkg-badge{background:rgba(0,245,160,0.15);border:1px solid rgba(0,245,160,0.4);color:#00f5a0;}
+  #s4 .card{border:1.5px solid rgba(0,245,160,0.35);background:rgba(5,15,8,0.97);box-shadow:0 0 40px rgba(0,245,160,0.08);}
+  #s4 .price-main{color:#00f5a0;text-shadow:0 0 30px rgba(0,245,160,0.5);}
+  #s4 .price-currency{color:rgba(0,245,160,0.5);}
+  #s4 .ck{background:rgba(0,245,160,0.15);color:#00f5a0;border:1px solid rgba(0,245,160,0.3);}
+
+  /* PACKAGE 4 - PLUS (Yellow) */
+  #s5 .pkg-num{color:rgba(255,220,80,0.6);}
+  #s5 .card{border:1px solid rgba(255,220,80,0.25);}
+  #s5 .price-main{color:#ffdc50;text-shadow:0 0 30px rgba(255,220,80,0.4);}
+  #s5 .price-currency{color:rgba(255,220,80,0.5);}
+  #s5 .ck{background:rgba(255,220,80,0.12);color:#ffdc50;border:1px solid rgba(255,220,80,0.25);}
+  #s5 .extra-note{background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.2);color:rgba(255,200,50,0.8);}
+  #s5 .extra-note .em{color:#ffc832;}
+
+  /* PACKAGE 5 - PRO (Orange) */
+  #s6{background:#080406;}
+  #s6 .bg-grad{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(255,140,60,0.1),transparent 60%);}
+  #s6 .pkg-num{color:rgba(255,140,60,0.7);}
+  #s6 .pkg-badge{background:rgba(255,140,60,0.15);border:1px solid rgba(255,140,60,0.4);color:#ff8c3c;}
+  #s6 .card{border:1.5px solid rgba(255,140,60,0.3);background:rgba(15,8,5,0.97);box-shadow:0 0 40px rgba(255,140,60,0.08);}
+  #s6 .price-main{color:#ff8c3c;text-shadow:0 0 30px rgba(255,140,60,0.5);}
+  #s6 .price-currency{color:rgba(255,140,60,0.5);}
+  #s6 .ck{background:rgba(255,140,60,0.12);color:#ff8c3c;border:1px solid rgba(255,140,60,0.25);}
+
+  /* PACKAGE 6 - BUSINESS (Purple) */
+  #s7 .pkg-num{color:rgba(180,100,255,0.6);}
+  #s7 .card{border:1px solid rgba(180,100,255,0.25);}
+  #s7 .price-main{color:#b464ff;text-shadow:0 0 30px rgba(180,100,255,0.4);}
+  #s7 .price-currency{color:rgba(180,100,255,0.5);}
+  #s7 .ck{background:rgba(180,100,255,0.12);color:#b464ff;border:1px solid rgba(180,100,255,0.25);}
+
+  /* PACKAGE 7 - PREMIUM (Pink/Red) */
+  #s8{background:#0a0406;}
+  #s8 .bg-grad{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,rgba(255,80,140,0.12),transparent 60%);}
+  #s8 .pkg-num{color:rgba(255,80,140,0.7);}
+  #s8 .pkg-badge{background:rgba(255,80,140,0.15);border:1px solid rgba(255,80,140,0.4);color:#ff508c;}
+  #s8 .card{border:1.5px solid rgba(255,80,140,0.35);background:rgba(15,5,8,0.97);box-shadow:0 0 40px rgba(255,80,140,0.1);}
+  #s8 .price-main{color:#ff508c;text-shadow:0 0 30px rgba(255,80,140,0.5);}
+  #s8 .price-currency{color:rgba(255,80,140,0.5);}
+  #s8 .ck{background:rgba(255,80,140,0.12);color:#ff508c;border:1px solid rgba(255,80,140,0.25);}
+
+  /* ===========================
+     SLIDE 9 — CTA WITH WHATSAPP
+  =========================== */
+  #s9{
+    background:#050508;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+  }
+  #s9 .bg-grid{
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(0,245,160,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,160,0.05) 1px,transparent 1px);
+    background-size:44px 44px;
+  }
+  #s9 .orb{
+    position:absolute;width:380px;height:380px;
+    background:radial-gradient(circle,rgba(0,245,160,0.15),transparent 70%);
+    top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;
+    animation:pulse 4s ease-in-out infinite;
+  }
+  #s9 .content{position:relative;z-index:2;padding:50px 28px;}
+
+  #s9 .emoji{
+    font-size:4rem;display:block;margin-bottom:20px;
+    opacity:0;animation:zoomIn 0.5s 0.2s both;
+  }
+  #s9 .cta-title{
+    font-family:'Bebas Neue',sans-serif;font-size:3.8rem;line-height:1;
+    letter-spacing:3px;color:#fff;margin-bottom:20px;
+    opacity:0;animation:fadeUp 0.6s 0.4s both;
+  }
+  #s9 .cta-title .hl{color:#00f5a0;text-shadow:0 0 30px rgba(0,245,160,0.6);}
+  #s9 .cta-sub{
+    font-size:0.95rem;color:rgba(255,255,255,0.5);line-height:1.8;direction:rtl;
+    margin-bottom:32px;opacity:0;animation:fadeUp 0.5s 0.6s both;
+  }
+  #s9 .cta-sub strong{color:#00f5a0;}
+  
+  .whatsapp-btn{
+    display:inline-flex;align-items:center;gap:12px;
+    background:linear-gradient(135deg,#25D366,#128C7E);
+    border:none;border-radius:100px;
+    padding:16px 36px;
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+    font-size:1.1rem;font-weight:700;color:#fff;
+    text-decoration:none;direction:rtl;
+    box-shadow:0 8px 24px rgba(37,211,102,0.4);
+    cursor:pointer;
+    opacity:0;animation:zoomIn 0.6s 0.8s both;
+    transition:transform 0.2s,box-shadow 0.2s;
+  }
+  .whatsapp-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 12px 32px rgba(37,211,102,0.6);
+  }
+  .whatsapp-btn .icon{font-size:1.8rem;}
+
+  .handle{
+    margin-top:24px;font-family:'Space Mono',monospace;
+    font-size:0.85rem;color:rgba(255,255,255,0.3);
+    opacity:0;animation:fadeUp 0.5s 1s both;
+  }
+  .handle span{color:rgba(0,245,160,0.6);}
+
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BARS -->
+<div class="progress-bars">
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+  <div class="prog-bar"></div>
+</div>
+
+<div class="slides">
+  <!-- ===== SLIDE 1: HOOK ===== -->
+  <div class="slide" id="s1">
+    <div class="bg-grid"></div>
+    <div class="orb"></div>
+    <div class="content">
+      <p class="eyebrow">⚠️ لو إنت ده — اتفرج لآخره</p>
+      <div class="question">
+        عندك<br><span class="hl">مشروع</span><br>ومش لاقيه؟
+      </div>
+      <div class="who-cards">
+        <div class="wcard"><span class="icon">🏪</span> صاحب محل أو شركة</div>
+        <div class="wcard"><span class="icon">📚</span> مدرس أو كوتش</div>
+        <div class="wcard"><span class="icon">💼</span> فريلانسر أو صاحب خدمة</div>
+      </div>
+      <p class="answer">أنا هعملك <strong>ويب سايت احترافي</strong> يجيب عليك عملاء وأنت نايم 😴</p>
+      <div class="price-pill">يبدأ من <span>700 ج</span> بس 🔥</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: PACKAGE 1 - STARTER ===== -->
+  <div class="slide pkg-slide" id="s2">
+    <div class="bg-stripe"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 01 · الباقة الأولى</p>
+      <h2 class="pkg-name">STARTER</h2>
+      <p class="pkg-name-ar">للبداية البسيطة</p>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">700</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">دفعة واحدة · بدون رسوم مخفية</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع لصفحة واحدة Landing Page</div>
+        <div class="feat"><div class="ck">✓</div>تصميم احترافي متجاوب مع الموبايل</div>
+        <div class="feat"><div class="ck">✓</div>لوجو بسيط للمشروع</div>
+        <div class="feat"><div class="ck">✓</div>زر واتساب مباشر</div>
+        <div class="feat"><div class="ck">✓</div>استضافة مجانية لمدة 3 شهور</div>
+        <div class="feat"><div class="ck">✓</div>تسليم خلال 3 أيام</div>
+      </div>
+      <div class="extra-note">⚠️ <span class="em">دومين (اسم الموقع)</span> مش داخل في السعر ده</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: PACKAGE 2 - BASIC ===== -->
+  <div class="slide pkg-slide" id="s3">
+    <div class="bg-stripe"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 02 · الباقة التانية</p>
+      <h2 class="pkg-name">BASIC</h2>
+      <p class="pkg-name-ar">للمواقع المتوسطة</p>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">1200</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">موقع متكامل بعدة صفحات</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع متعدد الصفحات (2-5 صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم UI/UX احترافي</div>
+        <div class="feat"><div class="ck">✓</div>لوجو كامل للمشروع</div>
+        <div class="feat"><div class="ck">✓</div>زر واتساب + فورم تواصل</div>
+        <div class="feat"><div class="ck">✓</div>استضافة مجانية لمدة 4 شهور</div>
+        <div class="feat"><div class="ck">✓</div>تسليم خلال 5 أيام</div>
+      </div>
+      <div class="extra-note">⚠️ <span class="em">دومين</span> مش داخل في السعر ده</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 4: PACKAGE 3 - STANDARD ===== -->
+  <div class="slide pkg-slide" id="s4">
+    <div class="bg-glow"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 03 · الباقة التالتة</p>
+      <h2 class="pkg-name">STANDARD</h2>
+      <div class="pkg-badge">⭐ العرض الأكثر طلباً</div>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">1500</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">شامل الدومين والاستضافة</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع متعدد الصفحات (2-5 صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم UI/UX احترافي</div>
+        <div class="feat"><div class="ck">✓</div>لوجو كامل للمشروع</div>
+        <div class="feat"><div class="ck">✓</div>واتساب + فورم + خريطة Google</div>
+        <div class="feat"><div class="ck">✓</div>دومين .com مجاناً لسنة 🎁</div>
+        <div class="feat"><div class="ck">✓</div>استضافة مجانية لمدة 6 شهور</div>
+        <div class="feat"><div class="ck">✓</div>SEO أساسي</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 5: PACKAGE 4 - PLUS ===== -->
+  <div class="slide pkg-slide" id="s5">
+    <div class="bg-stripe"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 04 · الباقة الرابعة</p>
+      <h2 class="pkg-name">PLUS</h2>
+      <p class="pkg-name-ar">للمشاريع الكبيرة</p>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">1800</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">موقع موسع بصفحات أكتر</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع موسع (5-8 صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم متقدم مع animations</div>
+        <div class="feat"><div class="ck">✓</div>لوجو احترافي + هوية بصرية</div>
+        <div class="feat"><div class="ck">✓</div>واتساب + فورم + خريطة + Gallery</div>
+        <div class="feat"><div class="ck">✓</div>استضافة مجانية لمدة 8 شهور</div>
+        <div class="feat"><div class="ck">✓</div>SEO متوسط</div>
+      </div>
+      <div class="extra-note">⚠️ <span class="em">دومين</span> مش داخل في السعر ده</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: PACKAGE 5 - PRO ===== -->
+  <div class="slide pkg-slide" id="s6">
+    <div class="bg-grad"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 05 · الباقة الخامسة</p>
+      <h2 class="pkg-name">PRO</h2>
+      <div class="pkg-badge">🔥 للجاد في مشروعه</div>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">2200</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">منظومة متكاملة مع دومين</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع موسع (5-8 صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم متقدم مع animations</div>
+        <div class="feat"><div class="ck">✓</div>لوجو احترافي + هوية بصرية كاملة</div>
+        <div class="feat"><div class="ck">✓</div>واتساب + فورم + خريطة + Gallery</div>
+        <div class="feat"><div class="ck">✓</div>دومين .com مجاناً لسنة 🎁</div>
+        <div class="feat"><div class="ck">✓</div>استضافة سنة كاملة مجاناً 🎁</div>
+        <div class="feat"><div class="ck">✓</div>SEO متقدم</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 7: PACKAGE 6 - BUSINESS ===== -->
+  <div class="slide pkg-slide" id="s7">
+    <div class="bg-stripe"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 06 · الباقة السادسة</p>
+      <h2 class="pkg-name">BUSINESS</h2>
+      <p class="pkg-name-ar">للشركات والأعمال الكبيرة</p>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">2500</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">موقع احترافي للشركات</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع كامل (8+ صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم احترافي premium</div>
+        <div class="feat"><div class="ck">✓</div>لوجو + هوية بصرية كاملة</div>
+        <div class="feat"><div class="ck">✓</div>كل وسائل التواصل + Blog</div>
+        <div class="feat"><div class="ck">✓</div>استضافة سنة كاملة</div>
+        <div class="feat"><div class="ck">✓</div>SEO متقدم + Google Analytics</div>
+      </div>
+      <div class="extra-note">⚠️ <span class="em">دومين</span> مش داخل في السعر ده</div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 8: PACKAGE 7 - PREMIUM ===== -->
+  <div class="slide pkg-slide" id="s8">
+    <div class="bg-grad"></div>
+    <div class="top-label">
+      <p class="pkg-num">PACKAGE 07 · الباقة السابعة</p>
+      <h2 class="pkg-name">PREMIUM</h2>
+      <div class="pkg-badge">👑 الباقة الملكية</div>
+    </div>
+    <div class="card">
+      <div class="price-row">
+        <span class="price-main">3000</span>
+        <span class="price-currency">ج</span>
+      </div>
+      <p class="price-note">كل حاجة + دومين + دعم فني</p>
+      <div class="features">
+        <div class="feat"><div class="ck">✓</div>موقع كامل (8+ صفحات)</div>
+        <div class="feat"><div class="ck">✓</div>تصميم فاخر مع كل المميزات</div>
+        <div class="feat"><div class="ck">✓</div>هوية بصرية كاملة احترافية</div>
+        <div class="feat"><div class="ck">✓</div>كل وسائل التواصل + Blog + CMS</div>
+        <div class="feat"><div class="ck">✓</div>دومين .com مجاناً لسنة 🎁</div>
+        <div class="feat"><div class="ck">✓</div>استضافة سنة كاملة مجاناً 🎁</div>
+        <div class="feat"><div class="ck">✓</div>SEO متقدم + تقرير أداء شهري</div>
+        <div class="feat"><div class="ck">✓</div>دعم فني لمدة 3 شهور</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 9: CTA WITH WHATSAPP ===== -->
+  <div class="slide" id="s9">
+    <div class="bg-grid"></div>
+    <div class="orb"></div>
+    <div class="content">
+      <span class="emoji">🤝</span>
+      <h2 class="cta-title">يلا<br>نبدأ <span class="hl">دلوقتي!</span></h2>
+      <p class="cta-sub">
+        متفوتش وقت — كل يوم من غير موقع<br>
+        يعني <strong>عملاء بيروحوا لمنافسك</strong>
+      </p>
+      <a href="https://wa.me/201066136940?text=مرحبا%20عايز%20أعرف%20أكتر%20عن%20عروض%20المواقع" class="whatsapp-btn">
+        <span class="icon">💬</span>
+        ابعتلي رسالة على الواتساب
+      </a>
+      <p class="handle">@<span>yourusername</span></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const bars   = document.querySelectorAll('.prog-bar');
+  const DURATION = 7000;
+  let current = 0, timer;
+
+  function goTo(i) {
+    slides.forEach(s => s.classList.remove('active'));
+    bars.forEach((b, idx) => {
+      b.classList.remove('active','done');
+      if(idx < i) b.classList.add('done');
+    });
+    slides[i].classList.add('active');
+    bars[i].classList.add('active');
+    current = i;
+    clearTimeout(timer);
+    if(i < slides.length - 1) timer = setTimeout(() => goTo(i+1), DURATION);
+  }
+
+  document.querySelector('.slides').addEventListener('click', () => {
+    goTo((current + 1) % slides.length);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
